@@ -1,6 +1,7 @@
 import PostContent from "../../components/posts/post-detail/post-content";
 import { getPostData, getPostFiles } from "../../helpers/post-util";
-
+import { Fragment } from "react";
+import Head from "next/head";
 /**
  * It takes a single post object as a prop, and returns a PostContent component with the post object as
  * a prop
@@ -8,7 +9,15 @@ import { getPostData, getPostFiles } from "../../helpers/post-util";
  * @returns A PostContent component with a post prop.
  */
 function SinglePostPage(props) {
-  return <PostContent post={props.post}/>;
+  return (
+    <Fragment>
+      <Head>
+        <title>{props.post.title}</title>
+        <meta name="description" content={props.post.excerpt}/>
+      </Head>
+      <PostContent post={props.post} />{" "}
+    </Fragment>
+  );
 }
 
 /**
@@ -17,11 +26,10 @@ function SinglePostPage(props) {
  * @returns The props object is being returned.
  */
 export function getStaticProps(context) {
-
   const { params } = context;
- 
+
   const { slug } = params;
- 
+
   /* Returning the post data. */
   const postData = getPostData(slug);
   return {
@@ -40,11 +48,10 @@ export function getStaticProps(context) {
  * fallback: A boolean value.
  */
 export function getStaticPaths() {
-  
   const postsFilenames = getPostFiles();
-  
+
   const slugs = postsFilenames.map((fileName) => fileName.replace(/\.md$/, ""));
-  
+
   return {
     paths: slugs.map((slug) => ({ params: { slug: slug } })),
     fallback: false,
