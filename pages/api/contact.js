@@ -1,8 +1,18 @@
 import { connectDataBase, insertDocuments } from "../../helpers/db-util";
 
+/**
+ * It tries to connect to the database, then tries to insert the new message into the database, and if
+ * either of those fail, it returns a 500 error
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a promise.
+ */
 async function handler(req, res) {
+
   if (req.method === "POST") {
+    
     const { email, name, message } = req.body;
+    
     if (
       !email ||
       !email.includes("@") ||
@@ -15,6 +25,7 @@ async function handler(req, res) {
       return;
     }
 
+    /* Creating a new object with the properties email, name, and message. */
     const newMessage = {
       email: email,
       name: name,
